@@ -9,14 +9,15 @@ import {
   type User as FirebaseUser,
 } from 'firebase/auth';
 
-// Firebase Web configuration from Vite environment variables
+// Firebase Web configuration from Vite environment variables with fallback defaults
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyCtthoYg4I6-uoupa5C5pycOLuqF47vg8Q",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "docquiz-be307.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "docquiz-be307",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "docquiz-be307.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "731118108909",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:731118108909:web:232da22cb66cd47a5d0ce4",
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-RSJ06D0E42",
 };
 
 export const isFirebaseConfigured = Boolean(
