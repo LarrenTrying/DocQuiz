@@ -30,6 +30,7 @@ import { BadgesModal } from '@/components/badges-modal';
 import { DiscordIcon } from '@/components/discord-settings-modal';
 import { ChallengeCreateModal } from '@/components/challenge-create-modal';
 import { useAuth } from '@/lib/auth-context';
+import { quizHistoryService, type HistoryQuestion } from '@/lib/quiz-history-service';
 import {
   generateKeyTakeaway,
   recordQuizCompletion,
@@ -127,11 +128,13 @@ function Results({
   setQuestionCount: (count: number) => void;
   onSelectDifficulty: (diff: QuizDifficulty) => void;
 }) {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [showBadgesModal, setShowBadgesModal] = useState(false);
   const [showChallengeModal, setShowChallengeModal] = useState(false);
   const [sharedToDiscord, setSharedToDiscord] = useState(false);
   const [sharingDiscord, setSharingDiscord] = useState(false);
+  const [historySaved, setHistorySaved] = useState(false);
+  const historySavedRef = useRef(false);
 
   const answeredCount = answers.filter((a) => a !== null).length;
   const score = quiz.questions.reduce(
@@ -139,6 +142,43 @@ function Results({
     0,
   );
   const percentage = quiz.questions.length ? Math.round((score / quiz.questions.length) * 100) : 0;
+
+  // Auto-save to Google Cloud Firestore Quiz History
+  useEffect(() => {
+    if (historySavedRef.current || !quiz.questions.length) return;
+    historySavedRef.current = true;
+
+    const formattedQuestions: HistoryQuestion[] = quiz.questions.map((q, idx) => ({
+      id: q.id || `q-${idx}`,
+      question: q.question,
+      options: q.options,
+      correctAnswerIndex: q.correctAnswerIndex,
+      selectedAnswerIndex: answers[idx] ?? null,
+      isCorrect: answers[idx] === q.correctAnswerIndex,
+      explanation: q.explanation,
+    }));
+
+    quizHistoryService
+      .saveRecord({
+        userId: user?.id || 'guest_user',
+        userEmail: user?.username || 'anonymous',
+        userName: user?.name || user?.username || 'Student',
+        title: quiz.title,
+        sourceFileName: quiz.sourceFileName,
+        score,
+        totalQuestions: quiz.questions.length,
+        percentage,
+        totalTimeSeconds: totalTimeSpent,
+        difficulty,
+        completedAt: new Date().toISOString(),
+        questions: formattedQuestions,
+      })
+      .then(() => setHistorySaved(true))
+      .catch((err) => {
+        console.warn('Failed to auto-save quiz history:', err);
+      });
+  }, [quiz, answers, score, totalTimeSpent, difficulty, user]);
+
   const avgTimePerQuestion = answeredCount ? Math.round((totalTimeSpent / answeredCount) * 10) / 10 : 0;
 
   // Gamification completion registration
@@ -196,14 +236,28 @@ function Results({
             <p className="font-mono-ui mb-3 text-[10px] uppercase tracking-[.2em] text-primary">Session complete / 03</p>
             <h1 className="text-4xl tracking-[-.04em] sm:text-5xl">You made it stick.</h1>
             <p className="mt-3 text-sm text-muted-foreground">{quiz.title}</p>
+            {historySaved && (
+              <span className="inline-flex items-center gap-1.5 text-xs font-mono-ui text-emerald-600 dark:text-emerald-400 mt-2 font-medium">
+                <Check size={13} className="stroke-[3]" /> Saved to Google Cloud Vault
+              </span>
+            )}
           </div>
-          <Link
-            href="/"
-            className="hidden items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-muted-foreground transition-colors hover:text-foreground sm:flex"
-            data-testid="link-new-notes"
-          >
-            <ArrowLeft size={14} /> New notes
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/history"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-primary/30 bg-primary/10 px-3.5 py-2.5 text-xs font-bold text-primary transition-colors hover:bg-primary/20 shadow-sm"
+              data-testid="link-view-history"
+            >
+              <Clock size={13} /> Review Vault
+            </Link>
+            <Link
+              href="/"
+              className="hidden items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-muted-foreground transition-colors hover:text-foreground sm:flex"
+              data-testid="link-new-notes"
+            >
+              <ArrowLeft size={14} /> New notes
+            </Link>
+          </div>
         </div>
 
         {/* Gamification & XP Banner */}

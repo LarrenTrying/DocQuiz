@@ -6,6 +6,7 @@ import { TooltipProvider } from '@/components/ui/tooltip';
 import NotFound from '@/pages/not-found';
 import Home from '@/pages/home';
 import QuizPage from '@/pages/quiz';
+import HistoryPage from '@/pages/history';
 import ChallengePage from '@/pages/challenge';
 import AuthPage from '@/pages/auth';
 import { AuthProvider, useAuth } from '@/lib/auth-context';
@@ -145,6 +146,9 @@ function Router() {
         </Route>
         <Route path="/quiz">
           {() => <ProtectedRoute component={QuizPage} />}
+        </Route>
+        <Route path="/history">
+          {() => <ProtectedRoute component={HistoryPage} />}
         </Route>
 
         <Route component={NotFound} />

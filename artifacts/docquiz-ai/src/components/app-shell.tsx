@@ -12,6 +12,7 @@ import {
   Flame,
   Award,
   Users,
+  Clock,
 } from 'lucide-react';
 import { Link, useLocation } from 'wouter';
 import { getHealthCheckQueryKey, useHealthCheck } from '@workspace/api-client-react';
@@ -144,6 +145,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link href="/quiz" className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition-colors ${location === '/quiz' ? 'bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-foreground))]' : 'text-[hsl(var(--sidebar-foreground)/.68)] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-foreground))]'}`} data-testid="link-nav-quiz">
             <Sparkles size={15} /> Current quiz
           </Link>
+          <Link href="/history" className={`flex items-center gap-3 rounded-xl px-3 py-2 text-sm font-semibold transition-colors ${location === '/history' ? 'bg-[hsl(var(--sidebar-accent))] text-[hsl(var(--sidebar-foreground))]' : 'text-[hsl(var(--sidebar-foreground)/.68)] hover:bg-[hsl(var(--sidebar-accent))] hover:text-[hsl(var(--sidebar-foreground))]'}`} data-testid="link-nav-history">
+            <Clock size={15} /> Quiz History
+          </Link>
           <button
             type="button"
             onClick={() => setIsLensOpen(true)}
@@ -229,6 +233,14 @@ export function AppShell({ children }: { children: ReactNode }) {
                 >
                   <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
                   <span>Discord Integration…</span>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onClick={() => setLocation('/history')}
+                  className="flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-foreground hover:bg-accent/15"
+                >
+                  <Clock size={14} className="text-primary" />
+                  <span>Quiz History & Vault</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -355,6 +367,13 @@ export function AppShell({ children }: { children: ReactNode }) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => setLocation('/history')}
+                    className="flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-foreground"
+                  >
+                    <Clock size={14} className="text-primary" />
+                    <span>Quiz History & Vault</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => setIsDiscordModalOpen(true)}
                     className="flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-foreground"

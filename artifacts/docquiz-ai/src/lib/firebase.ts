@@ -8,6 +8,7 @@ import {
   type Auth,
   type User as FirebaseUser,
 } from 'firebase/auth';
+import { getFirestore, type Firestore } from 'firebase/firestore';
 
 // Firebase Web configuration from Vite environment variables with fallback defaults
 const firebaseConfig = {
@@ -28,6 +29,7 @@ export const isFirebaseConfigured = Boolean(
 
 let app: FirebaseApp | null = null;
 let auth: Auth | null = null;
+let db: Firestore | null = null;
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account',
@@ -37,10 +39,11 @@ if (isFirebaseConfigured) {
   try {
     app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
     auth = getAuth(app);
+    db = getFirestore(app);
   } catch (err) {
     console.warn('Firebase initialization error:', err);
   }
 }
 
-export { app, auth, googleProvider, signInWithPopup, fbSignOut, onAuthStateChanged };
-export type { FirebaseUser };
+export { app, auth, db, googleProvider, signInWithPopup, fbSignOut, onAuthStateChanged };
+export type { FirebaseUser, Firestore };
