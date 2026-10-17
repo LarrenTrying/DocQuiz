@@ -229,7 +229,7 @@ function Results({
 
   return (
     <AppShell>
-      <div className="mx-auto w-full max-w-5xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
         {/* Top Header */}
         <div className="fade-up mb-8 flex items-start justify-between gap-5">
           <div>
@@ -318,7 +318,7 @@ function Results({
           )}
         </div>
 
-        <div className="grid gap-5 md:grid-cols-[.9fr_1.1fr]">
+        <div className="grid gap-6 lg:grid-cols-[380px_1fr] xl:grid-cols-[420px_1fr]">
           <section className="fade-up fade-up-delay-1 flex flex-col rounded-[22px] bg-secondary p-7 text-secondary-foreground paper-shadow sm:p-9">
             <p className="font-mono-ui text-[10px] uppercase tracking-[.18em] text-secondary-foreground/55">Your score</p>
             <div className="mt-6 flex items-end gap-2">
@@ -581,7 +581,7 @@ function QuestionCard({
   );
 
   return (
-    <div className={`fade-up mx-auto w-full max-w-4xl ${settings.dyslexiaFont ? 'font-sans tracking-wide' : ''}`}>
+    <div className={`fade-up mx-auto w-full max-w-5xl ${settings.dyslexiaFont ? 'font-sans tracking-wide' : ''}`}>
       {/* Quiz Accessibility & Adaptive Toolbar */}
       <QuizToolbar
         question={question}
@@ -650,7 +650,7 @@ function QuestionCard({
       )}
 
       <h1
-        className={`max-w-3xl text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.12] tracking-[-.035em] ${
+        className={`max-w-4xl text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.12] tracking-[-.035em] ${
           settings.dyslexiaFont ? 'leading-relaxed' : ''
         }`}
         data-testid={`text-question-${question.id}`}
@@ -969,7 +969,7 @@ export default function QuizPage() {
 
   return (
     <AppShell>
-      <div className="mx-auto w-full max-w-5xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 pb-14 pt-8 sm:px-8 md:px-10 md:pt-10">
         {/* Top Header with title and controls */}
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="min-w-0">

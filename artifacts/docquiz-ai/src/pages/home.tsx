@@ -125,7 +125,7 @@ export default function Home() {
 
   return (
     <AppShell>
-      <div className="mx-auto w-full max-w-6xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 pb-16 pt-8 sm:px-8 md:px-10 md:pt-10">
         <div className="mb-10 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div className="fade-up">
             <p className="font-mono-ui mb-3 flex items-center gap-2 text-[10px] uppercase tracking-[.22em] text-primary"><span className="h-px w-5 bg-primary" /> Study desk / 01</p>

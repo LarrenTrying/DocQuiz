@@ -136,7 +136,7 @@ export default function HistoryPage() {
 
   return (
     <AppShell>
-      <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 md:px-8 sm:py-10">
+      <div className="mx-auto w-full max-w-[1440px] px-4 py-8 sm:px-8 md:px-10 sm:py-10">
         {/* Page Header */}
         <div className="fade-up mb-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
