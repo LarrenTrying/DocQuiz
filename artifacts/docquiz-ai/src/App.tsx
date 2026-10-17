@@ -45,49 +45,11 @@ function ProtectedRoute({ component: Component }: { component: ComponentType }) 
   return <Component />;
 }
 
-// Discord OAuth2 Callback Redirect Handler
+// Discord Server Redirect Handler
 function DiscordCallbackHandler() {
-  const [, setLocation] = useLocation();
-  const { token } = useAuth();
-  const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
-
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    const state = params.get('state');
-
-    async function completeAuth() {
-      try {
-        const res = await fetch('/api/discord/callback', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            ...(token ? { Authorization: `Bearer ${token}` } : {}),
-          },
-          body: JSON.stringify({ code: code || 'oauth_code_completed', state }),
-        });
-
-        if (res.ok) {
-          setStatus('success');
-          // If in a popup, close popup after notifying parent
-          if (window.opener) {
-            window.opener.postMessage({ type: 'DISCORD_AUTH_SUCCESS' }, '*');
-            setTimeout(() => window.close(), 1000);
-          } else {
-            setTimeout(() => setLocation('/'), 1200);
-          }
-        } else {
-          setStatus('error');
-          setTimeout(() => setLocation('/'), 2000);
-        }
-      } catch {
-        setStatus('error');
-        setTimeout(() => setLocation('/'), 2000);
-      }
-    }
-
-    completeAuth();
-  }, [token, setLocation]);
+    window.location.href = 'https://discord.gg/DQqxbrrPB';
+  }, []);
 
   return (
     <div className="flex min-h-[100dvh] items-center justify-center bg-background p-5">
@@ -95,24 +57,10 @@ function DiscordCallbackHandler() {
         <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-[#5865F2] text-white shadow-md">
           <DiscordIcon className="h-7 w-7" />
         </div>
-        <h2 className="mt-4 text-lg font-bold">
-          {status === 'processing'
-            ? 'Connecting Discord…'
-            : status === 'success'
-            ? 'Discord Connected!'
-            : 'Connection Completed'}
-        </h2>
-        <p className="mt-1 text-xs text-muted-foreground">
-          {status === 'processing'
-            ? 'Linking your Discord account securely.'
-            : 'Redirecting back to your study desk…'}
-        </p>
+        <h2 className="mt-4 text-lg font-bold">Opening Discord Server…</h2>
+        <p className="mt-1 text-xs text-muted-foreground">Redirecting to https://discord.gg/DQqxbrrPB</p>
         <div className="mt-5 flex justify-center">
-          {status === 'processing' ? (
-            <Loader2 className="h-5 w-5 animate-spin text-primary" />
-          ) : (
-            <Check className="h-5 w-5 text-emerald-500" />
-          )}
+          <Loader2 className="h-5 w-5 animate-spin text-[#5865F2]" />
         </div>
       </div>
     </div>
@@ -134,7 +82,8 @@ function Router() {
           {() => <AuthPage initialView="forgot-password" />}
         </Route>
 
-        {/* Discord OAuth Callback */}
+        {/* Discord Server Redirects */}
+        <Route path="/discord" component={DiscordCallbackHandler} />
         <Route path="/discord/callback" component={DiscordCallbackHandler} />
 
         {/* Multiplayer Challenge Arena (accessible with or without login) */}

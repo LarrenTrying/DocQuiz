@@ -201,38 +201,17 @@ export default function ChallengePage() {
     }
   };
 
-  const handleShareToDiscord = async () => {
+  const handleShareToDiscord = () => {
     if (!challenge) return;
-    try {
-      const res = await fetch('/api/discord/share-achievement', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          title: 'Challenge Champion',
-          topic: challenge.topic,
-          score: challenge.questions.reduce(
-            (total, q, idx) => total + (answers[idx] === q.correctAnswerIndex ? 1 : 0),
-            0,
-          ),
-          total: challenge.questions.length,
-          percentage: Math.round(
-            (challenge.questions.reduce((tot, q, i) => tot + (answers[i] === q.correctAnswerIndex ? 1 : 0), 0) /
-              challenge.questions.length) *
-              100,
-          ),
-          streak: 1,
-          level: 1,
-          badgeTitle: userRank === 1 ? '🥇 #1 Challenge Winner' : '⚡ Active Recall Challenger',
-        }),
-      });
-      if (res.ok) {
-        setDiscordShared(true);
-        setTimeout(() => setDiscordShared(false), 4000);
-      }
-    } catch {}
+    const score = challenge.questions.reduce(
+      (total, q, idx) => total + (answers[idx] === q.correctAnswerIndex ? 1 : 0),
+      0,
+    );
+    const textToShare = `🏆 I scored ${score}/${challenge.questions.length} on "${challenge.topic}" in DocQuiz! Can you beat my score? Join the Discord server: https://discord.gg/DQqxbrrPB`;
+    navigator.clipboard.writeText(textToShare);
+    setDiscordShared(true);
+    setTimeout(() => setDiscordShared(false), 4000);
+    window.open('https://discord.gg/DQqxbrrPB', '_blank', 'noopener,noreferrer');
   };
 
   const handleCopyLink = () => {
@@ -562,7 +541,7 @@ export default function ChallengePage() {
                     className="flex items-center gap-2 rounded-xl bg-[#5865F2] px-4 py-2.5 text-xs font-bold text-white shadow-md transition-transform hover:-translate-y-0.5"
                   >
                     <DiscordIcon className="h-4 w-4" />
-                    <span>{discordShared ? 'Shared to Discord!' : 'Share to Discord'}</span>
+                    <span>{discordShared ? 'Copied & Opening Discord…' : 'Share on Discord Server'}</span>
                   </button>
 
                   <button

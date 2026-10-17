@@ -180,7 +180,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             data-testid="button-sidebar-discord"
           >
             <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
-            <span>Discord Study</span>
+            <span>Join Discord</span>
+            <span className="ml-auto rounded-full bg-[#5865F2]/20 px-1.5 py-0.5 font-mono-ui text-[9px] font-bold text-[#5865F2]">SERVER</span>
           </button>
           <button
             type="button"
@@ -232,7 +233,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   className="flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-foreground hover:bg-accent/15"
                 >
                   <DiscordIcon className="w-4 h-4 text-[#5865F2]" />
-                  <span>Discord Integration…</span>
+                  <span>Join Discord Server…</span>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
@@ -328,8 +329,8 @@ export function AppShell({ children }: { children: ReactNode }) {
             <button
               type="button"
               onClick={() => setIsDiscordModalOpen(true)}
-              className="flex items-center justify-center rounded-full border border-[#5865F2]/30 bg-[#5865F2]/10 p-2 text-[#5865F2]"
-              title="Discord Settings"
+              className="flex items-center justify-center rounded-full border border-[#5865F2]/30 bg-[#5865F2]/10 p-2 text-[#5865F2] hover:bg-[#5865F2]/20 transition-colors"
+              title="Join DocQuiz Discord Server"
             >
               <DiscordIcon className="w-3.5 h-3.5" />
             </button>
