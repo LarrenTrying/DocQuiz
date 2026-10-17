@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { authService, type AuthUser } from './auth-service';
+import { isFirebaseConfigured } from './firebase';
 
 const TOKEN_KEY = 'docquiz-ai.auth.token.v2';
 const USER_KEY = 'docquiz-ai.auth.user.v2';
@@ -25,7 +26,9 @@ interface AuthContextType {
     confirmNewPassword?: string;
   }) => Promise<AuthUser>;
   demoLogin: () => Promise<AuthUser>;
+  signInWithGoogle: () => Promise<AuthUser>;
   logout: () => Promise<void>;
+  isFirebaseConfigured: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -103,6 +106,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return login('alex_morgan', 'DocQuiz2026!');
   };
 
+  const signInWithGoogle = async () => {
+    const { token: newToken, user: newUser } = await authService.signInWithGoogle();
+    saveSession(newToken, newUser);
+    return newUser;
+  };
+
   const logout = async () => {
     await authService.logout(token);
     clearSession();
@@ -120,7 +129,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         getSecurityQuestion,
         resetPassword,
         demoLogin,
+        signInWithGoogle,
         logout,
+        isFirebaseConfigured,
       }}
     >
       {children}

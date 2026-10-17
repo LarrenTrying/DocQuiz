@@ -14,6 +14,8 @@ export interface AuthResponse {
   error?: string;
 }
 
+import { auth, googleProvider, signInWithPopup, fbSignOut, isFirebaseConfigured } from './firebase';
+
 const API_BASE = '/api/auth';
 const LOCAL_USERS_KEY = 'docquiz-ai.local_users.v2';
 
@@ -301,7 +303,64 @@ export const authService = {
     throw new Error('User not found');
   },
 
+  async signInWithGoogle(): Promise<{ token: string; user: AuthUser }> {
+    if (!isFirebaseConfigured || !auth) {
+      throw new Error(
+        'Firebase is not configured yet. Please provide your VITE_FIREBASE_* credentials in your .env file.'
+      );
+    }
+
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const fbUser = result.user;
+      const idToken = await fbUser.getIdToken();
+
+      const username = fbUser.email
+        ? fbUser.email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '_')
+        : (fbUser.displayName?.toLowerCase().replace(/\s+/g, '_') || 'user');
+
+      const authUser: AuthUser = {
+        id: fbUser.uid,
+        username,
+        name: fbUser.displayName || username,
+        avatarUrl: fbUser.photoURL || undefined,
+        securityQuestion: 'Google Authentication Account',
+        createdAt: fbUser.metadata.creationTime || new Date().toISOString(),
+      };
+
+      // Persist to local users cache
+      const users = getLocalUsers();
+      if (!users.some((u) => u.id === authUser.id || u.username === authUser.username)) {
+        users.push({ ...authUser });
+        saveLocalUsers(users);
+      }
+
+      return {
+        token: idToken,
+        user: authUser,
+      };
+    } catch (err: any) {
+      if (err.code === 'auth/popup-closed-by-user') {
+        throw new Error('Sign in was cancelled (popup closed).');
+      }
+      if (err.code === 'auth/cancelled-popup-request') {
+        throw new Error('Sign in was cancelled.');
+      }
+      if (err.code === 'auth/unauthorized-domain') {
+        throw new Error('This domain is not authorized in Firebase Console > Authentication > Settings > Authorized Domains.');
+      }
+      throw new Error(err.message || 'Failed to sign in with Google.');
+    }
+  },
+
   async logout(token?: string | null): Promise<void> {
+    if (auth && auth.currentUser) {
+      try {
+        await fbSignOut(auth);
+      } catch {
+        // ignore
+      }
+    }
     if (!token) return;
     try {
       await fetch(`${API_BASE}/logout`, {
