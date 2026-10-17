@@ -33,8 +33,8 @@ async function callGeminiMultimodal(
       }
     }
     parts.push({
-      inline_data: {
-        mime_type: mimeType,
+      inlineData: {
+        mimeType: mimeType,
         data: rawData,
       },
     });

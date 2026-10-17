@@ -168,8 +168,35 @@ export function AskAiBar({ documentContext, className = '' }: AskAiBarProps) {
 
     const reader = new FileReader();
     reader.onload = (event) => {
-      const dataUrl = event.target?.result as string;
-      setAttachedImage(dataUrl);
+      const img = new Image();
+      img.src = event.target?.result as string;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        const maxDim = 1024;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          setAttachedImage(img.src);
+          return;
+        }
+        ctx.drawImage(img, 0, 0, width, height);
+        setAttachedImage(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = () => {
+        setAttachedImage(event.target?.result as string);
+      };
     };
     reader.readAsDataURL(file);
 
@@ -202,21 +229,59 @@ export function AskAiBar({ documentContext, className = '' }: AskAiBarProps) {
     setPrompt('');
     setAttachedImage(null);
 
-    try {
-      const res = await fetch('/api/chat/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: promptToSend,
-          imageBase64: imageToSend,
-          documentContext,
-          history: updatedHistory.map((m) => ({ role: m.role, content: m.content })),
-        }),
-      });
+    const payload = JSON.stringify({
+      message: promptToSend,
+      imageBase64: imageToSend,
+      documentContext,
+      history: updatedHistory.map((m) => ({ role: m.role, content: m.content })),
+    });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to get response from AI.');
+    try {
+      let res: Response | null = null;
+      let lastErrMessage = '';
+
+      // 1. Try relative /api route
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+        res = await fetch('/api/chat/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (proxyErr: any) {
+        lastErrMessage = proxyErr.message || 'Proxy error';
+      }
+
+      // 2. Direct fallback to port 5050
+      if (!res || !res.ok) {
+        try {
+          const directUrl = `${window.location.protocol}//${window.location.hostname}:5050/api/chat/ask`;
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
+          res = await fetch(directUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+        } catch (directErr: any) {
+          lastErrMessage = directErr.message || lastErrMessage;
+        }
+      }
+
+      if (!res || !res.ok) {
+        let errDetail = 'Failed to get response from AI.';
+        if (res) {
+          const data = await res.json().catch(() => ({}));
+          errDetail = data.error || `Server responded with status ${res.status}`;
+        } else if (lastErrMessage) {
+          errDetail = `Connection error: ${lastErrMessage}. Ensure the API server is running on port 5050.`;
+        }
+        throw new Error(errDetail);
       }
 
       const data = await res.json();

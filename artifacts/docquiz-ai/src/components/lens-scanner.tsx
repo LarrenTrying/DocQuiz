@@ -253,16 +253,28 @@ export function LensScannerModal({
 
   // Capture snapshot from video
   const capturePhoto = () => {
-    if (!videoRef.current || !canvasRef.current) return;
+    if (!videoRef.current) return;
     const video = videoRef.current;
-    const canvas = canvasRef.current;
-    canvas.width = video.videoWidth || 1280;
-    canvas.height = video.videoHeight || 720;
+    let width = video.videoWidth || 1280;
+    let height = video.videoHeight || 720;
+    const maxDim = 1024;
+    if (width > maxDim || height > maxDim) {
+      if (width > height) {
+        height = Math.round((height * maxDim) / width);
+        width = maxDim;
+      } else {
+        width = Math.round((width * maxDim) / height);
+        height = maxDim;
+      }
+    }
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+    ctx.drawImage(video, 0, 0, width, height);
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
 
     // Stop camera stream
     if (streamRef.current) {
@@ -297,7 +309,7 @@ export function LensScannerModal({
     }
 
     try {
-      const compressedBase64 = await compressImage(file);
+      const compressedBase64 = await compressImage(file, 1024, 1024, 0.75);
       setImagePreview(compressedBase64);
       setResult(null);
     } catch (err: any) {
@@ -312,20 +324,58 @@ export function LensScannerModal({
     setErrorMessage(null);
     setResult(null);
 
-    try {
-      const res = await fetch('/api/chat/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: question.trim() || 'Analyze this image. If it contains a question, math problem, or notes, solve and explain step-by-step.',
-          imageBase64: imagePreview,
-          documentContext,
-        }),
-      });
+    const payload = JSON.stringify({
+      message: question.trim() || 'Analyze this image. If it contains a question, math problem, or notes, solve and explain step-by-step.',
+      imageBase64: imagePreview,
+      documentContext,
+    });
 
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
-        throw new Error(data.error || 'Failed to analyze image.');
+    try {
+      let res: Response | null = null;
+      let lastErrMessage = '';
+
+      // 1. Try relative /api route (Vite dev proxy)
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 20000);
+        res = await fetch('/api/chat/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: payload,
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+      } catch (proxyErr: any) {
+        lastErrMessage = proxyErr.message || 'Proxy error';
+      }
+
+      // 2. Fallback directly to API server on port 5050 if Vite proxy drops connection
+      if (!res || !res.ok) {
+        try {
+          const directUrl = `${window.location.protocol}//${window.location.hostname}:5050/api/chat/ask`;
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
+          res = await fetch(directUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: payload,
+            signal: controller.signal,
+          });
+          clearTimeout(timeoutId);
+        } catch (directErr: any) {
+          lastErrMessage = directErr.message || lastErrMessage;
+        }
+      }
+
+      if (!res || !res.ok) {
+        let errDetail = 'Failed to analyze image.';
+        if (res) {
+          const data = await res.json().catch(() => ({}));
+          errDetail = data.error || `Server responded with status ${res.status}`;
+        } else if (lastErrMessage) {
+          errDetail = `Connection error: ${lastErrMessage}. Ensure the API server is running on http://localhost:5050.`;
+        }
+        throw new Error(errDetail);
       }
 
       const data = await res.json();
