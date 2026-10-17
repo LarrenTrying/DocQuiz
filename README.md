@@ -11,7 +11,7 @@
 
 **Turn study notes, documents, textbooks, and photos into interactive, active-recall quizzes in seconds.**
 
-[Explore Features](#-features) • [Quickstart](#-quickstart) • [Firebase Setup](#-google-cloud--firebase-setup) • [Architecture](#%EF%B8%8F-architecture--monorepo-structure) • [Discord Server](https://discord.gg/DQqxbrrPB)
+[Explore Features](#-features) • [Tech Stack](#%EF%B8%8F-tech-stack) • [Quickstart](#-quickstart) • [Firebase Setup](#-google-cloud--firebase-setup) • [Architecture](#%EF%B8%8F-architecture--monorepo-structure) • [Discord Server](https://discord.gg/DQqxbrrPB)
 
 </div>
 
@@ -106,6 +106,56 @@ DocQuiz/
 ├── pnpm-workspace.yaml             # pnpm workspace config
 └── README.md                       # Documentation
 ```
+
+---
+
+## 🛠️ Tech Stack
+
+DocQuiz AI is built on a modern, high-performance technology stack across every layer:
+
+### 💻 Frontend
+| Technology | Role | Description |
+| :--- | :--- | :--- |
+| **[React 19.2](https://react.dev/)** | Core UI Library | Functional components, reactive hooks, and fast concurrency |
+| **[Vite 7.3](https://vitejs.dev/)** | Bundler & Dev Server | Sub-second HMR, native ESM dev server, and optimized production builds |
+| **[Tailwind CSS v4](https://tailwindcss.com/)** | Styling & UI | Ultra-fast utility styling, dark mode theming, and responsive design |
+| **[TanStack React Query v5](https://tanstack.com/query)** | Server State | Async state synchronization, caching, and background refetching |
+| **[Wouter](https://github.com/molefrog/wouter)** | Client Routing | Tiny (~1.5 KB), performant routing with zero overhead |
+| **[Radix UI](https://www.radix-ui.com/)** | UI Primitives | Accessible, unstyled primitives for Modals, Dropdowns, and Popovers |
+| **[Lucide React](https://lucide.dev/)** | Iconography | Clean, modern feather icons throughout the interface |
+| **[Canvas Confetti](https://www.npmjs.com/package/canvas-confetti)** | Animations | Interactive visual celebration upon quiz completion |
+
+### ⚙️ Backend & Document Processing
+| Technology | Role | Description |
+| :--- | :--- | :--- |
+| **[Node.js](https://nodejs.org/)** | Runtime | Asynchronous, event-driven runtime (v18+) |
+| **[Express 5](https://expressjs.com/)** | API Framework | REST API endpoints, CORS handling, and streaming request parsers |
+| **[pdf-parse](https://www.npmjs.com/package/pdf-parse)** | PDF Ingestion | In-memory text extraction from complex, multi-page PDF documents |
+| **[mammoth](https://www.npmjs.com/package/mammoth)** | DOCX Ingestion | Converts Word `.docx` documents into structured, parseable text |
+| **[esbuild](https://esbuild.github.io/)** | Production Bundler | Compiles TypeScript and Node backend in milliseconds |
+| **[Pino & Pino-HTTP](https://getpino.io/)** | Structured Logging | Blazing fast JSON structured logger with low overhead |
+
+### ☁️ Cloud & Database
+| Technology | Role | Description |
+| :--- | :--- | :--- |
+| **[Firebase Authentication](https://firebase.google.com/products/auth)** | Auth Provider | 1-Click Google OAuth2 popup (`signInWithPopup`) and Email/Password |
+| **[Google Cloud Firestore](https://firebase.google.com/products/firestore)** | NoSQL Database | Real-time, cloud-synced persistent store for quiz attempts and questions |
+| **Browser LocalStorage** | Offline Cache | Seamless instant fallback for offline quiz saving and user sessions |
+
+### 🧠 Multimodal AI & Vision
+| Technology | Role | Description |
+| :--- | :--- | :--- |
+| **[Google Gemini 2.5 Flash](https://ai.google.dev/)** | Visual Reasoning | Step-by-step problem solver for scanned equations, charts, and notes |
+| **[OpenAI GPT-4o-mini](https://openai.com/)** | Secondary AI | Synthesis of contextual questions, distractors, and explanations |
+| **Deterministic Fallback Engine** | Offline Solver | Smart keyword & concept extraction when working completely offline |
+
+### 📐 Type Safety & Contracts
+| Technology | Role | Description |
+| :--- | :--- | :--- |
+| **[TypeScript 5.7+](https://www.typescriptlang.org/)** | Language | End-to-end static typing across frontend and backend workspaces |
+| **[OpenAPI 3.1](https://www.openapis.org/)** | API Contract | Language-agnostic specification for all backend endpoints |
+| **[Zod](https://zod.dev/)** | Runtime Validation | Type-safe schema validation for requests and responses |
+| **[pnpm Workspaces](https://pnpm.io/workspaces)** | Monorepo Tooling | Fast, space-efficient dependency management and multi-package scripts |
 
 ---
 
