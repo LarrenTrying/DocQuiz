@@ -302,23 +302,23 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
       <div className="pointer-events-none absolute -bottom-40 -right-40 h-[500px] w-[500px] rounded-full bg-accent/15 blur-[140px]" />
 
       {/* Top Header / Brand Mark */}
-      <header className="relative z-20 w-full pt-5 pb-2">
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm shadow-primary/25">
-              <BookOpen size={18} className="stroke-[2.5]" />
+      <header className="relative z-20 w-full pt-6 pb-3">
+        <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-16">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/25">
+              <BookOpen size={22} className="stroke-[2.5]" />
             </div>
-            <span className="text-base font-bold tracking-tight text-foreground">
+            <span className="text-2xl sm:text-3xl font-black tracking-tight text-foreground">
               Qzi <span className="text-primary font-black">AI</span>
             </span>
           </div>
 
-          <div className="flex items-center gap-2 rounded-full border border-border/80 bg-card/60 backdrop-blur-md px-3 py-1 text-xs text-muted-foreground shadow-xs">
-            <span className="relative flex h-2 w-2">
+          <div className="flex items-center gap-2.5 rounded-full border border-border/80 bg-card/70 backdrop-blur-md px-4 py-1.5 text-xs text-muted-foreground shadow-xs">
+            <span className="relative flex h-2.5 w-2.5">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-500" />
             </span>
-            <span className="font-mono-ui text-[11px]">Active Recall Protocol</span>
+            <span className="font-mono-ui text-xs font-medium">Active Recall Protocol</span>
           </div>
         </div>
       </header>
@@ -326,7 +326,7 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
       {/* =========================================================================
           MAIN ANIMATED SLIDING AUTHENTICATION CONTAINER (Florin Pop / Double Slider)
           ========================================================================= */}
-      <main className="relative z-10 mx-auto w-full max-w-4xl flex-1 px-4 py-6 sm:px-6 flex items-center justify-center">
+      <main className="relative z-10 mx-auto w-full max-w-5xl lg:max-w-6xl flex-1 px-4 py-6 sm:px-8 flex items-center justify-center">
         
         {/* The Outer Main Frame with Paper Shadow & Clean Border */}
         <motion.div
@@ -338,7 +338,7 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
             x: isShaking ? [0, -6, 6, -4, 4, -2, 2, 0] : 0,
           }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="relative w-full min-h-[600px] rounded-3xl border border-border/90 bg-card shadow-2xl paper-shadow overflow-hidden"
+          className="relative w-full min-h-[640px] rounded-3xl border border-border/90 bg-card shadow-2xl paper-shadow overflow-hidden"
         >
           
           {/* =========================================================================
@@ -506,10 +506,10 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
               /* STANDARD SIGN IN FORM */
               <div className="flex-1 flex flex-col justify-center space-y-5">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                     Sign in
                   </h2>
-                  <p className="mt-1.5 text-xs text-muted-foreground">
+                  <p className="mt-2 text-sm text-muted-foreground">
                     Use your account credentials to access your documents.
                   </p>
                 </div>
@@ -681,10 +681,10 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
             <div className="flex-1 flex flex-col justify-center space-y-3.5">
               <div className="flex items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground">
                     Create Account
                   </h2>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     Start turning your study notes into active recall quizzes.
                   </p>
                 </div>
@@ -958,20 +958,20 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
 
               {/* OVERLAY LEFT PANEL (Shows when Sign Up is active, on the Left 50% of the screen) */}
               <div
-                className={`absolute top-0 left-0 w-1/2 h-full flex flex-col items-center justify-center p-10 text-center transition-transform duration-700 ease-in-out ${
+                className={`absolute top-0 left-0 w-1/2 h-full flex flex-col items-center justify-center p-8 sm:p-12 text-center transition-transform duration-700 ease-in-out ${
                   rightPanelActive ? 'translate-x-0' : '-translate-x-1/5'
                 }`}
               >
-                <div className="relative z-10 max-w-xs space-y-4">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-white shadow-inner border border-white/20">
-                    <BookOpen size={24} className="stroke-[2.5]" />
+                <div className="relative z-10 max-w-sm space-y-5">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-white shadow-inner border border-white/20">
+                    <BookOpen size={28} className="stroke-[2.5]" />
                   </div>
 
-                  <h2 className="text-3xl font-bold tracking-tight text-white leading-tight">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
                     Welcome Back!
                   </h2>
 
-                  <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-medium">
+                  <p className="text-sm sm:text-base text-white/90 leading-relaxed font-medium">
                     To keep connected with your study notes and personalized quizzes, please sign in with your personal info.
                   </p>
 
@@ -981,9 +981,9 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
                       whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.25)' }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => toggleAuthMode(false)}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-2.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all shadow-lg hover:shadow-white/20 cursor-pointer"
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-9 py-3 text-xs sm:text-sm font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all shadow-lg hover:shadow-white/20 cursor-pointer"
                     >
-                      <LogIn size={14} />
+                      <LogIn size={15} />
                       <span>SIGN IN</span>
                     </motion.button>
                   </div>
@@ -992,20 +992,20 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
 
               {/* OVERLAY RIGHT PANEL (Shows when Sign In is active, on the Right 50% of the screen) */}
               <div
-                className={`absolute top-0 right-0 w-1/2 h-full flex flex-col items-center justify-center p-10 text-center transition-transform duration-700 ease-in-out ${
+                className={`absolute top-0 right-0 w-1/2 h-full flex flex-col items-center justify-center p-8 sm:p-12 text-center transition-transform duration-700 ease-in-out ${
                   rightPanelActive ? 'translate-x-1/5' : 'translate-x-0'
                 }`}
               >
-                <div className="relative z-10 max-w-xs space-y-4">
-                  <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-white shadow-inner border border-white/20">
-                    <BrainCircuit size={24} className="stroke-[2.5]" />
+                <div className="relative z-10 max-w-sm space-y-5">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white/15 backdrop-blur-md text-white shadow-inner border border-white/20">
+                    <BrainCircuit size={28} className="stroke-[2.5]" />
                   </div>
 
-                  <h2 className="text-3xl font-bold tracking-tight text-white leading-tight">
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
                     Hello, Friend!
                   </h2>
 
-                  <p className="text-xs sm:text-sm text-white/85 leading-relaxed font-medium">
+                  <p className="text-sm sm:text-base text-white/90 leading-relaxed font-medium">
                     Enter your personal details and start your journey with Qzi AI to master any document.
                   </p>
 
@@ -1015,9 +1015,9 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
                       whileHover={{ scale: 1.05, backgroundColor: 'rgba(255, 255, 255, 0.25)' }}
                       whileTap={{ scale: 0.96 }}
                       onClick={() => toggleAuthMode(true)}
-                      className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-8 py-2.5 text-xs font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all shadow-lg hover:shadow-white/20 cursor-pointer"
+                      className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-white/10 px-9 py-3 text-xs sm:text-sm font-bold uppercase tracking-widest text-white backdrop-blur-sm transition-all shadow-lg hover:shadow-white/20 cursor-pointer"
                     >
-                      <UserPlus size={14} />
+                      <UserPlus size={15} />
                       <span>SIGN UP</span>
                     </motion.button>
                   </div>
@@ -1037,9 +1037,9 @@ export default function AuthPage({ initialView = 'login' }: { initialView?: stri
 
       {/* Clean Minimal Trust Footer */}
       <footer className="relative z-10 w-full py-4 text-center text-xs text-muted-foreground">
-        <div className="mx-auto flex max-w-5xl items-center justify-center gap-2 px-6">
+        <div className="mx-auto flex max-w-7xl items-center justify-center gap-2 px-6">
           <ShieldCheck size={14} className="text-emerald-600 dark:text-emerald-400" />
-          <span className="font-mono-ui text-[11px]">
+          <span className="font-mono-ui text-xs">
             Qzi AI © 2026 · AI-Powered Document Intelligence & Active Recall
           </span>
         </div>
