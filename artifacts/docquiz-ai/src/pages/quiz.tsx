@@ -229,7 +229,7 @@ function Results({
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-4xl px-5 pb-14 pt-8 md:px-10 md:pt-12">
+      <div className="mx-auto w-full max-w-5xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
         {/* Top Header */}
         <div className="fade-up mb-8 flex items-start justify-between gap-5">
           <div>
@@ -581,7 +581,7 @@ function QuestionCard({
   );
 
   return (
-    <div className={`fade-up mx-auto max-w-3xl ${settings.dyslexiaFont ? 'font-sans tracking-wide' : ''}`}>
+    <div className={`fade-up mx-auto w-full max-w-4xl ${settings.dyslexiaFont ? 'font-sans tracking-wide' : ''}`}>
       {/* Quiz Accessibility & Adaptive Toolbar */}
       <QuizToolbar
         question={question}
@@ -650,7 +650,7 @@ function QuestionCard({
       )}
 
       <h1
-        className={`max-w-2xl text-[clamp(1.8rem,4vw,3.35rem)] leading-[1.06] tracking-[-.04em] ${
+        className={`max-w-3xl text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.12] tracking-[-.035em] ${
           settings.dyslexiaFont ? 'leading-relaxed' : ''
         }`}
         data-testid={`text-question-${question.id}`}
@@ -969,7 +969,7 @@ export default function QuizPage() {
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-5xl px-5 pb-14 pt-8 md:px-10 md:pt-12">
+      <div className="mx-auto w-full max-w-5xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
         {/* Top Header with title and controls */}
         <div className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="min-w-0">

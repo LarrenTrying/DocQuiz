@@ -261,7 +261,7 @@ export default function ChallengePage() {
 
   return (
     <AppShell>
-      <div className="mx-auto max-w-4xl px-5 pb-14 pt-8 md:px-10 md:pt-12">
+      <div className="mx-auto w-full max-w-5xl px-4 pb-14 pt-8 sm:px-6 md:px-8 md:pt-10">
         {/* Top Challenge Header */}
         <div className="fade-up mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border pb-6">
           <div>

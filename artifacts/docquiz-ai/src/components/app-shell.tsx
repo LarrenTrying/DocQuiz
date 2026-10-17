@@ -105,7 +105,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         onOpenChange={setIsChallengeModalOpen}
       />
 
-      <aside className="hidden min-h-[100dvh] w-[246px] shrink-0 flex-col bg-[hsl(var(--sidebar))] px-5 py-6 text-[hsl(var(--sidebar-foreground))] md:flex">
+      <aside className="sticky top-0 hidden h-screen w-[246px] shrink-0 flex-col bg-[hsl(var(--sidebar))] px-5 py-6 text-[hsl(var(--sidebar-foreground))] md:flex overflow-y-auto border-r border-[hsl(var(--sidebar-border))]">
         <Link href="/" className="mb-8 flex items-center gap-3" data-testid="link-brand-home">
           <Mark />
           <span>
@@ -308,7 +308,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         </div>
       </aside>
 
-      <div className="min-w-0 flex-1 md:pl-[246px]">
+      <div className="min-w-0 flex-1 flex flex-col">
         <header className="flex h-[68px] items-center justify-between border-b border-border bg-background/90 px-5 backdrop-blur md:hidden">
           <Link href="/" className="flex items-center gap-2.5" data-testid="link-mobile-brand">
             <Mark />
@@ -429,7 +429,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             )}
           </div>
         </header>
-        <main>{children}</main>
+        <main className="flex-1 w-full">{children}</main>
       </div>
 
       {/* Google Lens Scanner Modal */}
